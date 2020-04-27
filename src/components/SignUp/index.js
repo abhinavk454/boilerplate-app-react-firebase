@@ -1,0 +1,69 @@
+import React ,{Component} from "react";
+import {Link} from "react-router-dom";
+
+import * as ROUTES from "../../constants/routes";
+
+const SignUpPage=()=>(
+    <div>
+        <h1>
+            SignUp
+        </h1>
+        <SignUpForm />
+    </div>
+);
+
+const INITIAL_STATE={
+    username: '',
+    email: '',
+    passwordOne: '',
+    passwordTwo: '',
+    error: null
+};
+
+class SignUpForm extends Component{
+    constructor(props){
+        super(props);
+        this.state={...INITIAL_STATE}//... means same as it's helpsto select partials values from object
+    }
+    onSubmit=event=>{
+        this.setState({[event.target.name]:event.target.value});
+    };
+    onChange=event=>{
+
+    };
+    render(){
+        const{
+            username,
+            email,
+            passwordOne,
+            passwordTwo,
+            error//firebase has error.message property by default
+        }=this.state;
+        const isInvalid=
+            passwordOne!==passwordTwo||
+            passwordOne===''||
+            email===''||
+            username==='';
+        return(
+            <form onSubmit={this.onSubmit}>
+                <input name="username" value={username} onChange={this.onChange} type="text" placeholder="FullName"/>
+                <input name="email" value={email} onChange={this.onChange} type="text" placeholder="Email Id"/>
+                <input name="passwordOne" value={passwordOne} onChange={this.onChange} type="password" placeholder="Password"/>
+                <input name="passwordTwo" value={passwordTwo} onChange={this.onChange} type="password" placeholder="confirm password"/>
+                <button disabled={isInvalid} type="submit">Sign Up</button>
+                {error && <p>{error.message}</p>}
+            </form>
+        );
+    }
+}
+
+const SignUpLink=()=>(
+    <p>
+        account not found
+        <Link to={ROUTES.SIGN_UP}>Signup</Link>
+    </p>
+);
+
+export default SignUpPage;
+
+export {SignUpForm,SignUpLink};
