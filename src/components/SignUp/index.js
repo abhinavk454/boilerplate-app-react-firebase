@@ -1,6 +1,6 @@
 import React ,{Component} from "react";
-import {Link} from "react-router-dom";
-import {FirebaseContext} from "../Firebase";
+import {Link, withRouter} from "react-router-dom";
+import {withFirebase} from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 
 const SignUpPage=()=>(
@@ -8,9 +8,7 @@ const SignUpPage=()=>(
         <h1>
             SignUp
         </h1>
-        <FirebaseContext.Consumer>
-            {firebase=> <SignUpForm firebase={firebase}/>}
-        </FirebaseContext.Consumer>
+        <SignUpForm />
     </div>
 );
 
@@ -22,7 +20,7 @@ const INITIAL_STATE={
     error: null
 };
 
-class SignUpForm extends Component{
+class SignUpFormBase extends Component{
     constructor(props){
         super(props);
         this.state={...INITIAL_STATE}//... means same as it's helpsto select partials values from object
@@ -33,6 +31,7 @@ class SignUpForm extends Component{
             .doCreateUserWithEmailAndPassword(email,passwordOne)
             .then(authUser=>{
                 this.setState({...INITIAL_STATE});
+                this.props.history.push(ROUTES.HOME);//get home to redirected user
             })
             .catch(error=>{
                 this.setState({error});
@@ -74,6 +73,8 @@ const SignUpLink=()=>(
         <Link to={ROUTES.SIGN_UP}>Signup</Link>
     </p>
 );
+
+const SignUpForm=withRouter(withFirebase(SignUpFormBase));
 
 export default SignUpPage;
 
